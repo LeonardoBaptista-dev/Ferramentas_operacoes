@@ -1,8 +1,1 @@
-#!/bin/bash
 
-# Create setup script for Streamlit Cloud deployment
-apt-get update
-apt-get install -y 
-    
-# Additional system dependencies if needed
-# apt-get install -y <package-name>

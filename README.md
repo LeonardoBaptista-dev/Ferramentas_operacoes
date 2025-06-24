@@ -105,3 +105,5 @@ Para qualquer plataforma, você precisará configurar:
 ## Suporte
 
 Para questões técnicas ou suporte, entre em contato através dos canais oficiais da Sucesso em Vendas.
+
+inteligenciaartificalsv.streamlit.app
