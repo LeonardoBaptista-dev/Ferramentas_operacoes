@@ -59,23 +59,43 @@ def app(config=None):
         logger.info(f"Novo caminho das credenciais: {os.getenv('GOOGLE_APPLICATION_CREDENTIALS')}")
     except Exception as e:
         logger.error(f"Erro ao carregar .env: {e}")
-        st.warning("Arquivo .env não encontrado. Algumas funcionalidades podem não estar disponíveis.")
-
-    # Configuração do Gemini AI
+        st.warning("Arquivo .env não encontrado. Algumas funcionalidades podem não estar disponíveis.")    # Configuração do Gemini AI
     try:
-        # Obter caminho das credenciais do .env
-        caminho_credenciais = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 
-                                       str(Path(__file__).parent.parent / "decent-atlas-460512-g7-3b1d4ccb9c4e.json"))
-          # Verificar se o arquivo existe
-        if not os.path.exists(caminho_credenciais):
-            logger.warning(f"Arquivo de credenciais não encontrado: {caminho_credenciais}")
-            st.warning("⚠️ Credenciais do Google Cloud não configuradas corretamente. Verifique a configuração.")
-        # Configurar a variável de ambiente para o SDK do Google
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = caminho_credenciais
+        # Verificar se as credenciais estão configuradas (arquivo local ou JSON na variável de ambiente)
+        credenciais_env = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+        credenciais_configuradas = False
         
-        # Inicializar o modelo
+        if credenciais_env:
+            # Verificar se é um caminho de arquivo (ambiente local) ou JSON direto (Streamlit Cloud)
+            if credenciais_env.startswith('{') and credenciais_env.endswith('}'):
+                # É um JSON direto (Streamlit Cloud)
+                credenciais_configuradas = True
+                logger.info("Credenciais do Google Cloud detectadas como JSON na variável de ambiente")
+            elif os.path.exists(credenciais_env):
+                # É um caminho de arquivo válido (ambiente local)
+                credenciais_configuradas = True
+                logger.info(f"Credenciais do Google Cloud detectadas como arquivo: {credenciais_env}")
+            else:
+                # Tentar com o arquivo padrão local
+                caminho_padrao = str(Path(__file__).parent.parent / "decent-atlas-460512-g7-3b1d4ccb9c4e.json")
+                if os.path.exists(caminho_padrao):
+                    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = caminho_padrao
+                    credenciais_configuradas = True
+                    logger.info(f"Usando arquivo de credenciais padrão: {caminho_padrao}")
+        else:
+            # Tentar com o arquivo padrão local se não há variável de ambiente
+            caminho_padrao = str(Path(__file__).parent.parent / "decent-atlas-460512-g7-3b1d4ccb9c4e.json")
+            if os.path.exists(caminho_padrao):
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = caminho_padrao
+                credenciais_configuradas = True
+                logger.info(f"Usando arquivo de credenciais padrão: {caminho_padrao}")
+        
+        if not credenciais_configuradas:
+            logger.warning("Credenciais do Google Cloud não encontradas")
+            st.warning("⚠️ Credenciais do Google Cloud não configuradas corretamente. Verifique a configuração.")
+          # Inicializar o modelo
         llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3)
-        logger.info(f"Modelo Gemini inicializado com arquivo de credenciais: {caminho_credenciais}")
+        logger.info("Modelo Gemini inicializado com sucesso")
         
     except Exception as e:
         logger.error(f"Erro ao inicializar o modelo Gemini: {e}")
