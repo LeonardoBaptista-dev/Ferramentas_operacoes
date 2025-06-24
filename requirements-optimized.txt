@@ -1,0 +1,38 @@
+# Core dependencies
+streamlit==1.40.0
+python-dotenv==1.0.1
+
+# Google AI and LangChain
+langchain==0.2.17
+langchain-google-genai==1.0.10
+langchain-core==0.2.43
+google-generativeai==0.7.2
+
+# Document processing
+python-docx==1.1.2
+PyPDF2==3.0.1
+beautifulsoup4==4.12.3
+requests==2.32.3
+
+# Web scraping
+selenium==4.28.1
+webdriver-manager==4.0.2
+
+# Data processing
+pandas==2.2.3
+numpy==1.26.4
+
+# Email functionality
+yagmail==0.15.293
+
+# PDF generation
+reportlab==4.2.5
+weasyprint==63.0
+
+# Logging
+loguru==0.7.3
+
+# Other utilities
+tiktoken==0.8.0
+Pillow==10.4.0
+schedule==1.2.2
