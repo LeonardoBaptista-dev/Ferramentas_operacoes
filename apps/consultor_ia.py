@@ -66,12 +66,10 @@ def app(config=None):
         # Obter caminho das credenciais do .env
         caminho_credenciais = os.getenv('GOOGLE_APPLICATION_CREDENTIALS', 
                                        str(Path(__file__).parent.parent / "decent-atlas-460512-g7-3b1d4ccb9c4e.json"))
-        
-        # Verificar se o arquivo existe
+          # Verificar se o arquivo existe
         if not os.path.exists(caminho_credenciais):
             logger.warning(f"Arquivo de credenciais não encontrado: {caminho_credenciais}")
-            st.warning(f"Arquivo de credenciais não encontrado. Verifique o caminho: {caminho_credenciais}")
-        
+            st.warning("⚠️ Credenciais do Google Cloud não configuradas corretamente. Verifique a configuração.")
         # Configurar a variável de ambiente para o SDK do Google
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = caminho_credenciais
         
